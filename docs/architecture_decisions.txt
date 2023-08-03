@@ -1,0 +1,7 @@
+Architecture Decisions
+==========
+
+In designing our system, we made three key message passing technique decisions, which are as follows:
+  * REST APIs: The frontend client (both mobile and web) should use REST APIs to facilitate high-reliability integration with various HTTP routes. We chose REST because it offers a straightforward approach, and reduces complexity, while still providing high throughput in API performance.
+  * gRPC: For ingesting large volumes of location data from mobile devices, gRPC is a good approach. Although HTTP still has some good characteristics, however gRPC work with less overall payload sizes and connection overhead, which will boost the performance. By leveraging gRPC, our system can efficiently handle the location data from numerous mobile devices.
+  * Message Queue (Kafka): With gRPC, performance was boosted, however, a large number of location data will be input into the database. We need a queue to make the ingress speed into the database flatter. The location ingester service employs a message queue (Kafka) to control the ingested location data. This decision was taken to achieve improved performance, enhanced reliability (reduce lost data with key ), and enable efficient decoupling of our systems. Combining the use of Kafka with gRPC for location data ingestion yields multiple advantages, capitalizing on the strengths of both message-passing techniques. The main advantage characteristic of Kafka over other queue technologies is a durable distributed queue, capable of handling large data volumes effectively.
