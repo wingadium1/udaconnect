@@ -6,4 +6,4 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
-CMD ["python", "consumer.py"]
+CMD ["python", "localtion_consumer.py"]

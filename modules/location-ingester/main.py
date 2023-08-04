@@ -4,7 +4,7 @@ import location_pb2_grpc
 
 from concurrent import futures
 
-from utils import publish_location
+from kafka_location_producer import store_location
 
 class LocationIngesterServicer(location_pb2_grpc.LocationServiceServicer):
 
@@ -18,7 +18,7 @@ class LocationIngesterServicer(location_pb2_grpc.LocationServiceServicer):
             "longitude": request.longitude
         }
 
-        publish_location(payload)
+        store_location(payload)
         return location_pb2.LocationMessage(**payload)
 
 def serve():
