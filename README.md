@@ -38,17 +38,11 @@ We will be installing the tools that we'll need to use for getting our environme
 To run the application, you will need a K8s cluster running locally and to interface with it via `kubectl`. We will be using Vagrant with VirtualBox to run K3s.
 
 #### Initialize K3s
-In this project's root, run `vagrant up`.
-```bash
-$ vagrant up
-```
+In this project's root, run `vagrant up`. In my case, I used VM on promox, so it should work as expected
 The command will take a while and will leverage VirtualBox to load an [openSUSE](https://www.opensuse.org/) OS and automatically install [K3s](https://k3s.io/). When we are taking a break from development, we can run `vagrant suspend` to conserve some ouf our system's resources and `vagrant resume` when we want to bring our resources back up. Some useful vagrant commands can be found in [this cheatsheet](https://gist.github.com/wpscholar/a49594e2e2b918f4d0c4).
 
 #### Set up `kubectl`
 After `vagrant up` is done, you will SSH into the Vagrant environment and retrieve the Kubernetes config file used by `kubectl`. We want to copy the contents of this file into our local environment so that `kubectl` knows how to communicate with the K3s cluster.
-```bash
-$ vagrant ssh
-```
 You will now be connected inside of the virtual OS. Run `sudo cat /etc/rancher/k3s/k3s.yaml` to print out the contents of the file. You should see output similar to the one that I've shown below. Note that the output below is just for your reference: every configuration is unique and you should _NOT_ copy the output I have below.
 
 Copy the contents from the output issued from your own command into your clipboard -- we will be pasting it somewhere soon!
@@ -107,11 +101,8 @@ Afterwards, you can test that `kubectl` works by running a command like `kubectl
     kubectl port-forward $LOCATION_INGESTER_POD 5005:5005
     ```
 
-    Once you port forward the pods, you can use Postman 
-
-    ```
-    python grpc_client.py
-    ```
+    Once you port forward the pods, you can use Postman to invoke the gprc like
+    ![Running pods](docs/postman_gprc.png)
 
     > **N.B:** You can observe the progress of location ingestion by observing the logs of the `location-service` and `location-ingester` microservice using the commands belo:
 
