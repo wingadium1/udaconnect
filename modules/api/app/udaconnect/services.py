@@ -98,7 +98,7 @@ class LocationService:
     def create(location: Dict) -> Location:
         validation_results: Dict = LocationSchema().validate(location)
         if validation_results:
-            logger.warning(f"Unexpected data format in payload: {validation_results}")
+            logger.warning(f"There is an error: data format in payload: {validation_results}")
             raise Exception(f"Invalid payload: {validation_results}")
 
         new_location = Location()
