@@ -7,5 +7,5 @@ message LocationMessage {
 }
 
 service LocationService {
-    rpc Create(LocationMessage) returns (LocationMessage);
+    rpc StoreLocation(LocationMessage) returns (LocationMessage);
 }

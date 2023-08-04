@@ -99,15 +99,15 @@ Afterwards, you can test that `kubectl` works by running a command like `kubectl
 
     kubectl get svc
     ```
-14. Insert sample locations via gRPC using the sample gRPC client
+14. Port foward ingester pod to local
 
     ```
     export LOCATION_INGESTER_POD=$(kubectl get pods --namespace default -l "app=udaconnect-location-ingester" -o jsonpath="{.items[0].metadata.name}")
 
-    kubectl exec -it $LOCATION_INGESTER_POD sh
+    kubectl port-forward $LOCATION_INGESTER_POD 5005:5005
     ```
 
-    Once you are inside the shell, execute the grpc client with the command below (*you can run this several times, as it randomly generates location data for various users*):
+    Once you port forward the pods, you can use Postman 
 
     ```
     python grpc_client.py
