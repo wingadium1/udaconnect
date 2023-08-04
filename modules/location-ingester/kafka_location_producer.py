@@ -4,7 +4,7 @@ import os
 
 from kafka import KafkaProducer
 from typing import Dict
-from json import loads
+from json import dumps
 
 TOPIC_NAME = os.environ["TOPIC_NAME"]
 KAFKA_SERVER = os.environ["KAFKA_SERVER"]
