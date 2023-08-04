@@ -14,8 +14,8 @@ class LocationServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Create = channel.unary_unary(
-                '/LocationService/Create',
+        self.StoreLocation = channel.unary_unary(
+                '/LocationService/StoreLocation',
                 request_serializer=location__pb2.LocationMessage.SerializeToString,
                 response_deserializer=location__pb2.LocationMessage.FromString,
                 )
@@ -24,7 +24,7 @@ class LocationServiceStub(object):
 class LocationServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def Create(self, request, context):
+    def StoreLocation(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,8 +33,8 @@ class LocationServiceServicer(object):
 
 def add_LocationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Create': grpc.unary_unary_rpc_method_handler(
-                    servicer.Create,
+            'StoreLocation': grpc.unary_unary_rpc_method_handler(
+                    servicer.StoreLocation,
                     request_deserializer=location__pb2.LocationMessage.FromString,
                     response_serializer=location__pb2.LocationMessage.SerializeToString,
             ),
@@ -49,7 +49,7 @@ class LocationService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def Create(request,
+    def StoreLocation(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,7 +59,7 @@ class LocationService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/LocationService/Create',
+        return grpc.experimental.unary_unary(request, target, '/LocationService/StoreLocation',
             location__pb2.LocationMessage.SerializeToString,
             location__pb2.LocationMessage.FromString,
             options, channel_credentials,
