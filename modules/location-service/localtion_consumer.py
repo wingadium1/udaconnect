@@ -4,9 +4,12 @@ from kafka import KafkaConsumer
 from kafka.errors import KafkaError
 from location_database import store_location
 from json import loads
+import logging
 
 TOPIC_NAME = os.environ["TOPIC_NAME"]
 KAFKA_SERVER = os.environ["KAFKA_SERVER"]
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("udaconnect-location-consumer")
 
 # Create the kafka consumer
 consumer = KafkaConsumer(
@@ -15,30 +18,23 @@ consumer = KafkaConsumer(
     value_deserializer=lambda x: loads(x.decode('utf-8'))
     )
 
-while True:
-    for message in consumer:
-        store_location(message)
-
 running = True
 
-def basic_consume_loop(consumer, topics):
+def basic_consume_loop(consumer):
     try:
         while running:
-            msg = consumer.poll(timeout=1.0)
-            if msg is None: continue
+            for msg in consumer:
+                logger.info(f"{msg}")
+                if msg is None: continue
 
-            if msg.error():
-                if msg.error().code() == KafkaError._PARTITION_EOF:
-                    # End of partition event
-                    logger.error(f"{msg.topic()} [{msg.partition()}] reached end at offset {msg.offset()}\n")
-                elif msg.error():
-                    logger.error(f"There is an error when process kafka: {msg.error()}")
-            else:
-                store_location(message)
+                if msg is not None:
+                    store_location(msg.value)
+
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()
 
+basic_consume_loop(consumer)
 
 def shutdown():
     running = False

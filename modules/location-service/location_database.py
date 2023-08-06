@@ -19,8 +19,9 @@ logger = logging.getLogger("udaconnect-location-service")
 
 def store_location(location):
     try:
-        location_dict = json.loads(location)
-    except:
+        location_dict = location
+    except Error as e:
+        logger.error(f"There is an error. reason: {e}")
         logger.warning(f"There is an error: non-dictionary payload detected: {location}")
         return
 
@@ -30,11 +31,11 @@ def store_location(location):
         logger.warning(f"There is an error: data format in payload: {location}, reason: {validation_result}")
         return
 
-    if location_dict["longitude"] > 180 or location_dict["longitude"] < -180:
+    if float(location_dict["longitude"]) > 180 or float(location_dict["longitude"]) < -180:
         logger.error(f"There is an error: longitude format in payload: {location}, reason: longitude out of range")
 
 
-    if location_dict["latitude"] > 90 or location_dict["longitude"] < -90:
+    if float(location_dict["latitude"]) > 90 or float(location_dict["longitude"]) < -90:
         logger.error(f"There is an error: latitude format in payload: {location}, reason: latitude out of range")
 
     with psycopg2.connect(
@@ -47,7 +48,7 @@ def store_location(location):
         person_id = int(location_dict["person_id"])
         with conn.cursor() as cursor:
             try:
-                query = "INSERT INTO location (person_id, coordinate) VALUES ({}, ST_Point({}, {}))".format(person_id, location_dict["latitude"], location_dict["longitude"])
+                query = "INSERT INTO location (person_id, coordinate) VALUES ({}, ST_SetSRID(ST_MakePoint({}, {}),4326))".format(person_id, location_dict["latitude"], location_dict["longitude"])
                 cursor.execute(query)
             except OperationalError as e:
                 logger.error(f"Unable to save location data to the database. reason: {e}")
